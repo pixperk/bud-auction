@@ -93,7 +93,10 @@ export const bids = pgTable("ba_bids", {
 export const items = pgTable("item", {
   id: serial("id").primaryKey(),
   userId: text("userId")
-      .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
-      name : text("name").notNull()
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  name: text("name").notNull(),
+  startingPrice: integer("startingPrice").notNull().default(0),
+  color: integer("color").notNull().default(4251856),
+  emoji: text("emoji").notNull().default("🔔"),
 });

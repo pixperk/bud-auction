@@ -9,9 +9,9 @@ declare global {
   var database: NodePgDatabase<typeof schema> | undefined;
 }
 
-let database: NodePgDatabase<typeof schema> | undefined;
+let database: NodePgDatabase<typeof schema>;
 
-function getDatabase() {
+function db() {
   if (!database) {
     try {
       const pool = new Pool({ connectionString: env.DATABASE_URL });
@@ -29,4 +29,4 @@ function getDatabase() {
   return database;
 }
 
-export { getDatabase };
+export { db };

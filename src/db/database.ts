@@ -1,22 +1,32 @@
 import { env } from "@/env";
-import { drizzle, NodePgDatabase } from 'drizzle-orm/node-postgres';
+import { drizzle, NodePgDatabase } from "drizzle-orm/node-postgres";
+import { Pool } from "pg";
 import * as schema from "./schema";
 
-
+// Declare a global variable in Node.js to cache the database connection in development mode
 declare global {
-  // eslint-disable-next-line no-var -- only var works here
-var database : NodePgDatabase<typeof schema> | undefined
+  // eslint-disable-next-line no-var
+  var database: NodePgDatabase<typeof schema> | undefined;
 }
 
-let database : NodePgDatabase<typeof schema>
+let database: NodePgDatabase<typeof schema> | undefined;
 
-if (env.NODE_ENV === "production") {
-  database = drizzle(env.DATABASE_URL);
-} else {
-  if (!global.database) {
-    global.database = drizzle(env.DATABASE_URL);
+function getDatabase() {
+  if (!database) {
+    try {
+      const pool = new Pool({ connectionString: env.DATABASE_URL });
+      database = drizzle(pool, { schema });
+      
+      // Cache the database instance globally in development
+      if (env.NODE_ENV !== "production") {
+        global.database = database;
+      }
+    } catch (error) {
+      console.error("Failed to initialize database connection:", error);
+      throw new Error("Database connection initialization failed");
+    }
   }
-  database = global.database;
+  return database;
 }
 
-export { database };
+export { getDatabase };

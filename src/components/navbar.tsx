@@ -4,11 +4,12 @@ import { NotificationButton } from '@/components/NotificationButton'
 import { auth } from '@/auth'
 import { SignOut } from '@/components/sign-out'
 import SignIn from './sign-in'
+import { Gavel } from 'lucide-react'
 
 
 const navItems = [
-  { name: 'My Auctions', href: '/my-auctions' },
-  { name: 'All Auctions', href: '/all-auctions' },
+  { name: 'My Auctions', href: '/auctions/my' },
+  { name: 'All Auctions', href: '/auctions/all' },
   { name: 'Create Auction', href: '/bids/create' },
 ]
 
@@ -19,11 +20,9 @@ export async function Navbar() {
     <nav className="bg-background border-b sticky top-0 z-50 transition-shadow duration-300 ease-in-out hover:shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-          <div className="flex items-center">
-            <Link href="/" className="flex-shrink-0 flex items-center">
-              <img className="h-8 w-auto" src="/logo.svg" alt="" />
-              <span className="ml-2 text-lg font-semibold text-foreground">Bud Auction</span>
-            </Link>
+        <div className="flex items-center space-x-2">
+            <Gavel className="h-8 w-8 text-purple-600" />
+            <span className="text-2xl font-bold text-purple-600">Bud Auction</span>
           </div>
           <div className="hidden sm:ml-6 sm:flex sm:items-center space-x-4">
             {navItems.map((item) => (

@@ -6,9 +6,10 @@ import { Input } from "@/components/ui/input"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react'
 import { createItemAction } from './actions'
+import { PlusCircleIcon } from 'lucide-react'
 
 function EmojiPickerModal({ onEmojiSelect }: { onEmojiSelect: (emoji: string) => void }) {
-  const [selectedEmoji, setSelectedEmoji] = useState('😀')
+  const [selectedEmoji, setSelectedEmoji] = useState('🔔')
   const [open, setOpen] = useState(false)
 
   const handleEmojiClick = (emojiData: EmojiClickData) => {
@@ -35,7 +36,7 @@ function EmojiPickerModal({ onEmojiSelect }: { onEmojiSelect: (emoji: string) =>
 }
 
 function ColorPickerModal({ onColorSelect }: { onColorSelect: (color: string) => void }) {
-  const [selectedColor, setSelectedColor] = useState('#FF0000')
+  const [selectedColor, setSelectedColor] = useState('#FF5733')
   const [open, setOpen] = useState(false)
 
   const handleColorSelect = (color: string) => {
@@ -130,9 +131,13 @@ export default function SellItemPage() {
             <EmojiPickerModal onEmojiSelect={setSelectedEmoji} />
             <ColorPickerModal onColorSelect={setSelectedColor} />
           </div>
-          <Button className="w-full h-14 text-lg" type="submit">
-            Post Item
-          </Button>
+          <Button
+          size="lg"
+          className="w-full font-semibold bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 ease-in-out transform hover:-translate-y-1 active:translate-y-0 px-8 py-3 rounded-full"
+        >
+          <PlusCircleIcon className="mr-2 h-5 w-5" />
+          Create New Auction
+        </Button>
         </form>
       </div>
     </main>

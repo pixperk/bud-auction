@@ -99,4 +99,5 @@ export const items = pgTable("item", {
   startingPrice: integer("startingPrice").notNull().default(0),
   color: integer("color").notNull().default(4251856),
   emoji: text("emoji").notNull().default("🔔"),
+  bidInterval : integer("bidInterval").notNull().default(100)
 });

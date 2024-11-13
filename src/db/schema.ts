@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
   boolean,
   timestamp,
@@ -86,10 +87,6 @@ export const authenticators = pgTable(
   })
 );
 
-export const bids = pgTable("ba_bids", {
-  id: serial("id").primaryKey(),
-});
-
 export const items = pgTable("item", {
   id: serial("id").primaryKey(),
   userId: text("userId")
@@ -99,5 +96,28 @@ export const items = pgTable("item", {
   startingPrice: integer("startingPrice").notNull().default(0),
   color: integer("color").notNull().default(4251856),
   emoji: text("emoji").notNull().default("🔔"),
-  bidInterval : integer("bidInterval").notNull().default(100)
+  bidInterval: integer("bidInterval").notNull().default(100),
+  currentBid : integer("currentBid").notNull().default(0)
 });
+
+export const bids = pgTable("bids", {
+  id: serial("id").primaryKey(),
+  amount: integer("amount").notNull(),
+  itemId: serial("itemId")
+    .notNull()
+    .references(() => items.id, { onDelete: "cascade" }),
+  userId: text("userId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  timestamp : timestamp("timestamp", {mode : "date"}).notNull()
+});
+
+export const usersRelations = relations(bids, ({ one }) => ({
+  user: one(users, {
+    fields: [bids.userId],
+    references: [users.id],
+  }),
+}));
+
+export type Item = typeof items.$inferSelect
+export type Bids = typeof bids.$inferSelect

@@ -1,35 +1,39 @@
 import { db } from "@/db/database";
-import { items } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { bids, items } from "@/db/schema";
+import { desc, eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { FC } from "react";
 import AuctionItemPage from "./item-auction-page";
 import { toDollars } from "@/utils/currency";
+import { getAllBids } from "./actions";
 
 interface pageProps {
-  params: { itemId: number };
+  params: { itemId: string };
 }
 
 const page: FC<pageProps> = async ({ params: { itemId } }) => {
   const item = await db().query.items.findFirst({
-    where: eq(items.id, itemId),
+    where: eq(items.id, parseInt(itemId)),
   });
 
   if (!item) {
     redirect("/auctions/my");
   }
-  const mockBidders = [
-   
-  ];
+ 
+  const bidders = await getAllBids(parseInt(itemId));
+
+  
   const intColor = item.color;
   const color = `#${intColor.toString(16).padStart(6, "0")}`;
   return (
     <AuctionItemPage
+      itemId = { parseInt(itemId)}
       name={item.name}
       startingBid={toDollars(item.startingPrice)}
+      current={toDollars(item.currentBid)}
       emoji={item.emoji}
       color={color}
-      bidders={mockBidders}
+      bidders={bidders}
       bidInterval={toDollars(item.bidInterval)}
     />
   );

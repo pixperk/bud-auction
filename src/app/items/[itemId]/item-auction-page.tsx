@@ -23,51 +23,71 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { createBidAction } from './actions'
+import { Bids } from '@/db/schema'
+import { toDollars } from '@/utils/currency'
+import { formatDate } from '@/utils/date'
 
-interface Bidder {
-  id: string;
-  name: string;
-  bidAmount: number;
-  bidTime: string;
-}
+type BidType = Bids & {
+  user: {
+    image: string | null; 
+    name: string | null;  
+  };
+};
 
 interface AuctionItemProps {
+  itemId : number
   name: string;
   startingBid: number;
+  current : number
   emoji: string;
   color: string;
   bidInterval: number;
-  bidders: Bidder[];
+  bidders: BidType[];
 }
 
-export default function AuctionItemPage({ name = "Vintage Watch", startingBid = 10000, emoji = "⌚", color = "#4A90E2", bidders = [], bidInterval = 100 }: AuctionItemProps) {
-  const [currentBid, setCurrentBid] = useState(startingBid)
-  const [userBid, setUserBid] = useState(startingBid)
+export default function AuctionItemPage({ itemId,name, startingBid,current, emoji, color, bidders, bidInterval }: AuctionItemProps) {
+  const [currentBid, setCurrentBid] = useState(current>0?current:startingBid)
+  const [userBid, setUserBid] = useState(current>0?current:startingBid)
   const { toast } = useToast()
 
   const handleBidChange = (increment: boolean) => {
     setUserBid(prevBid => {
       const newBid = increment ? prevBid + bidInterval : prevBid - bidInterval
-      return Math.max(currentBid, newBid) // Ensure bid doesn't go below current bid
+      return Math.max(currentBid, newBid) 
     })
   }
 
-  const handleBidSubmit = () => {
+  const handleBidSubmit = async () => {
     if (userBid > currentBid) {
-      setCurrentBid(userBid)
-      toast({
-        title: "Bid placed successfully!",
-        description: `Your bid of $${userBid.toLocaleString()} has been placed.`,
-      })
+      try {
+        setCurrentBid(userBid);
+  
+        await createBidAction(itemId, userBid);
+  
+        toast({
+          title: "Bid placed successfully!",
+          description: `Your bid of $${userBid.toLocaleString()} has been placed.`,
+        });
+      } catch (e : any) {
+        setCurrentBid(currentBid);
+        setUserBid(currentBid)
+  
+        toast({
+          title: "Error placing bid",
+          description: e.message || "An unexpected error occurred.",
+          variant: "destructive",
+        });
+      }
     } else {
       toast({
         title: "Bid too low",
         description: "Your bid must be higher than the current bid.",
         variant: "destructive",
-      })
+      });
     }
-  }
-
+  };
+  
   return (
     <Card className="max-w-2xl mx-auto shadow-lg rounded-lg">
       <CardHeader>
@@ -165,9 +185,9 @@ export default function AuctionItemPage({ name = "Vintage Watch", startingBid = 
                 <TableBody>
                   {bidders.map((bidder) => (
                     <TableRow key={bidder.id}>
-                      <TableCell>{bidder.name}</TableCell>
-                      <TableCell>${bidder.bidAmount.toLocaleString()}</TableCell>
-                      <TableCell>{bidder.bidTime}</TableCell>
+                      <TableCell>{bidder.user.name}</TableCell>
+                      <TableCell>${toDollars(bidder.amount).toLocaleString()}</TableCell>
+                      <TableCell>{formatDate(bidder.timestamp)}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

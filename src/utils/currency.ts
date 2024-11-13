@@ -1,3 +1,3 @@
 export function toDollars (cents:number){
-    return Math.floor(cents/100)
+    return Number((cents/100).toFixed(2))
 }

@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { toast, useToast } from "@/hooks/use-toast"
-import { Clock, DollarSign, Users, ChevronUp, ChevronDown } from "lucide-react"
+import { useToast } from "@/hooks/use-toast"
+import { Clock, DollarSign, Users, ChevronUp, ChevronDown, User } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -27,6 +27,7 @@ import { createBidAction } from './actions'
 import { Bids } from '@/db/schema'
 import { toDollars } from '@/utils/currency'
 import { formatDate } from '@/utils/date'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 type BidType = Bids & {
   user: {
@@ -36,19 +37,25 @@ type BidType = Bids & {
 };
 
 interface AuctionItemProps {
-  itemId : number
+  itemId: number
   name: string;
   startingBid: number;
-  current : number
+  startedBy: {
+    name: string | null;
+    image: string | null;
+  }
+  current: number
   emoji: string;
   color: string;
   bidInterval: number;
   bidders: BidType[];
 }
 
-export default function AuctionItemPage({ itemId,name, startingBid,current, emoji, color, bidders, bidInterval }: AuctionItemProps) {
-  const [currentBid, setCurrentBid] = useState(current>0?current:startingBid)
-  const [userBid, setUserBid] = useState(current>0?current:startingBid)
+export default function AuctionItemPage({ 
+  itemId, name, startingBid, current, emoji, color, bidders, bidInterval, startedBy 
+}: AuctionItemProps) {
+  const [currentBid, setCurrentBid] = useState(current > 0 ? current : startingBid)
+  const [userBid, setUserBid] = useState(current > 0 ? current : startingBid)
   const { toast } = useToast()
 
   const handleBidChange = (increment: boolean) => {
@@ -62,17 +69,14 @@ export default function AuctionItemPage({ itemId,name, startingBid,current, emoj
     if (userBid > currentBid) {
       try {
         setCurrentBid(userBid);
-  
         await createBidAction(itemId, userBid);
-  
         toast({
           title: "Bid placed successfully!",
           description: `Your bid of $${userBid.toLocaleString()} has been placed.`,
         });
-      } catch (e : any) {
+      } catch (e: any) {
         setCurrentBid(currentBid);
         setUserBid(currentBid)
-  
         toast({
           title: "Error placing bid",
           description: e.message || "An unexpected error occurred.",
@@ -111,55 +115,74 @@ export default function AuctionItemPage({ itemId,name, startingBid,current, emoj
             </div>
           </div>
 
-<div className='flex  items-center justify-between'>
-          <div>
-            <h3 className="text-lg font-semibold mb-2">Current Bid</h3>
-            <p className="text-3xl font-bold" style={{ color }}>
-              ${currentBid.toLocaleString()}
+          <div className="flex items-center justify-between bg-gray-100 p-4 rounded-lg">
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Current Bid</h3>
+              <p className="text-3xl font-bold" style={{ color }}>
+                ${currentBid.toLocaleString()}
+              </p>
+            </div>
+
+            <div className='flex flex-col items-end'>
+              <h3 className="text-lg font-semibold mb-2">Place Your Bid</h3>
+              <div className="flex items-center space-x-2">
+                <div className="flex items-center border border-gray-300 rounded-md overflow-hidden bg-white">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="border-none"
+                    onClick={() => handleBidChange(false)}
+                  >
+                    <ChevronDown className="h-4 w-4 text-gray-600" />
+                  </Button>
+                  <Input
+                    type="number"
+                    value={userBid.toFixed(2)}
+                    onChange={(e) => setUserBid(Number(e.target.value))}
+                    className="text-center w-24 border-0 focus:ring-0 focus:outline-none"
+                  />
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="border-none"
+                    onClick={() => handleBidChange(true)}
+                  >
+                    <ChevronUp className="h-4 w-4 text-gray-600" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-gray-100 p-4 rounded-lg">
+            <h3 className="text-lg font-semibold mb-3">Item Details</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-sm text-gray-600">Bid Interval</p>
+                <p className="text-base font-medium">${bidInterval}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">Starting Bid</p>
+                <p className="text-base font-medium">${startingBid.toLocaleString()}</p>
+              </div>
+            </div>
+            <p className="mt-3 text-gray-700">
+              This {name.toLowerCase()} is a rare find, perfect for collectors and enthusiasts alike.
             </p>
           </div>
 
           
-
-          <div className='flex flex-col items-center justify-center'>
-            <h3 className="text-lg font-semibold mb-2">Place Your Bid</h3>
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center border border-gray-300 rounded-md overflow-hidden">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="border-none px-4 py-2"
-                  onClick={() => handleBidChange(false)}
-                >
-                  <ChevronDown className="h-5 w-5 text-gray-600" />
-                </Button>
-                <Input
-                  type="number"
-                  value={userBid.toFixed(2)}
-                  onChange={(e) => setUserBid(Number(e.target.value))}
-                  className="text-center w-24 border-0 focus:ring-0 focus:outline-none"
-                />
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="border-none px-4 py-2"
-                  onClick={() => handleBidChange(true)}
-                >
-                  <ChevronUp className="h-5 w-5 text-gray-600" />
-                </Button>
+            <div className="flex items-center justify-start space-x-3">
+              <Avatar className="h-10 w-10">
+                <AvatarImage src={startedBy.image || undefined} alt={startedBy.name || "User"} />
+                <AvatarFallback><User className="h-6 w-6" /></AvatarFallback>
+              </Avatar>
+              <div>
+                <p className="text-sm text-gray-600">Auction started by</p>
+                <p className="font-medium">{startedBy.name || "Anonymous"}</p>
               </div>
             </div>
-          </div>
-          </div>
-
-          <div className="bg-gray-100 p-4 rounded-lg">
-            <h3 className="text-lg font-semibold mb-2">Item Details</h3>
-            <p className="text-gray-700">
-              <b>Bid Interval : ${bidInterval}</b><br/>
-              This {name.toLowerCase()} is a rare find, perfect for collectors and enthusiasts alike.
-              Don&apos;t miss your chance to own this unique piece!
-            </p>
-          </div>
+         
 
           <Dialog>
             <DialogTrigger asChild>

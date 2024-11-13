@@ -14,6 +14,14 @@ interface pageProps {
 const page: FC<pageProps> = async ({ params: { itemId } }) => {
   const item = await db().query.items.findFirst({
     where: eq(items.id, parseInt(itemId)),
+    with : {
+      user : {
+        columns : {
+          name : true,
+          image : true
+        }
+      }
+    }
   });
 
   if (!item) {
@@ -21,6 +29,7 @@ const page: FC<pageProps> = async ({ params: { itemId } }) => {
   }
  
   const bidders = await getAllBids(parseInt(itemId));
+  const i = item.user
 
   
   const intColor = item.color;
@@ -30,6 +39,7 @@ const page: FC<pageProps> = async ({ params: { itemId } }) => {
       itemId = { parseInt(itemId)}
       name={item.name}
       startingBid={toDollars(item.startingPrice)}
+      startedBy = {item.user}
       current={toDollars(item.currentBid)}
       emoji={item.emoji}
       color={color}

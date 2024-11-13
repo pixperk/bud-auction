@@ -112,6 +112,13 @@ export const bids = pgTable("bids", {
   timestamp : timestamp("timestamp", {mode : "date"}).notNull()
 });
 
+export const itemsRelations = relations(items, ({ one }) => ({
+  user: one(users, {
+    fields: [items.userId],
+    references: [users.id],
+  }),
+}));
+
 export const usersRelations = relations(bids, ({ one }) => ({
   user: one(users, {
     fields: [bids.userId],

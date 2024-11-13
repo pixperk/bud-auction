@@ -29,13 +29,13 @@ const page: FC<pageProps> = async ({ params: { itemId } }) => {
   }
  
   const bidders = await getAllBids(parseInt(itemId));
-  const i = item.user
-
+ 
   
   const intColor = item.color;
   const color = `#${intColor.toString(16).padStart(6, "0")}`;
   return (
     <AuctionItemPage
+      ownerId= {item.userId}
       itemId = { parseInt(itemId)}
       name={item.name}
       startingBid={toDollars(item.startingPrice)}

@@ -5,8 +5,10 @@ import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Session, User } from 'next-auth'
+import { LogOut } from 'lucide-react'
+import { signOut } from 'next-auth/react'
 
-export function UserBadge({SignOut, user}:{SignOut :JSX.Element, user : User | undefined}) {
+export function UserBadge({user}:{user : User | undefined}) {
  
 
  if(!user){
@@ -32,7 +34,13 @@ export function UserBadge({SignOut, user}:{SignOut :JSX.Element, user : User | u
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          {SignOut}
+        <Button 
+        onClick={()=>signOut({
+          callbackUrl : "/"
+        })}
+        variant={"ghost"} type="submit" className={`w-full justify-start text-red-600`}>
+      <LogOut className="mr-2 h-4 w-4" />
+      Sign out</Button>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

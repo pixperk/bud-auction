@@ -28,6 +28,7 @@ import { Bids } from '@/db/schema'
 import { toDollars } from '@/utils/currency'
 import { formatDate } from '@/utils/date'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { useSession } from 'next-auth/react'
 
 type BidType = Bids & {
   user: {
@@ -37,6 +38,7 @@ type BidType = Bids & {
 };
 
 interface AuctionItemProps {
+  ownerId : string
   itemId: number
   name: string;
   startingBid: number;
@@ -51,9 +53,17 @@ interface AuctionItemProps {
   bidders: BidType[];
 }
 
+
+
 export default function AuctionItemPage({ 
-  itemId, name, startingBid, current, emoji, color, bidders, bidInterval, startedBy 
+
+  ownerId,itemId, name, startingBid, current, emoji, color, bidders, bidInterval, startedBy 
 }: AuctionItemProps) {
+  const session = useSession()
+
+  const canPlaceBid = session && session.data?.user
+  const owner = ownerId === session.data?.user?.id
+
   const [currentBid, setCurrentBid] = useState(current > 0 ? current : startingBid)
   const [userBid, setUserBid] = useState(current > 0 ? current : startingBid)
   const { toast } = useToast()
@@ -66,7 +76,7 @@ export default function AuctionItemPage({
   }
 
   const handleBidSubmit = async () => {
-    if (userBid > currentBid) {
+    if (userBid > currentBid || (userBid == startingBid && currentBid==0)) {
       try {
         setCurrentBid(userBid);
         await createBidAction(itemId, userBid);
@@ -81,6 +91,7 @@ export default function AuctionItemPage({
           title: "Error placing bid",
           description: e.message || "An unexpected error occurred.",
           variant: "destructive",
+          
         });
       }
     } else {
@@ -101,6 +112,7 @@ export default function AuctionItemPage({
             {emoji}
           </Badge>
         </div>
+        
       </CardHeader>
       <CardContent>
         <div className="space-y-6">
@@ -223,9 +235,10 @@ export default function AuctionItemPage({
         <Button
           onClick={handleBidSubmit}
           className="w-full text-lg"
+          disabled = {!canPlaceBid || owner}
           style={{ backgroundColor: color }}
         >
-          <DollarSign className="mr-2 h-5 w-5" /> Place Bid
+          {canPlaceBid?(owner?"You are the owner" : (<><DollarSign className="mr-2 h-5 w-5"/><span>Place Bid</span></>)) :  "Kindly Log In"}
         </Button>
       </CardFooter>
     </Card>

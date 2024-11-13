@@ -8,10 +8,13 @@ import { Separator } from "@/components/ui/separator"
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react'
 import { createItemAction } from './actions'
 import { PlusCircleIcon, Palette, Smile } from 'lucide-react'
+import { useToast } from '@/hooks/use-toast'
+import { redirect } from 'next/navigation'
 
 function EmojiPickerModal({ onEmojiSelect }: { onEmojiSelect: (emoji: string) => void }) {
   const [selectedEmoji, setSelectedEmoji] = useState('🔔')
   const [open, setOpen] = useState(false)
+  
 
   const handleEmojiClick = (emojiData: EmojiClickData) => {
     setSelectedEmoji(emojiData.emoji)
@@ -97,15 +100,30 @@ function ColorPickerModal({ onColorSelect }: { onColorSelect: (color: string) =>
 export default function SellItemPage() {
   const [selectedEmoji, setSelectedEmoji] = useState('😀')
   const [selectedColor, setSelectedColor] = useState('#FF0000')
+  const {toast} = useToast()
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    const formData = new FormData(event.currentTarget)
-    formData.append('emoji', selectedEmoji)
-    formData.append('color', selectedColor)
-    
-    createItemAction(formData);
-  }
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    formData.append("emoji", selectedEmoji);
+    formData.append("color", selectedColor);
+  
+    try {
+      await createItemAction(formData);
+      toast({
+        title: "Item created successfully!",
+        description: "Your new auction item has been added.",
+      });
+     
+    } catch (e : any) {
+      toast({
+        title: "Error creating item",
+        description: e.message || "An unexpected error occurred.",
+        variant: "destructive",
+      });
+    }
+  };
+  
 
   return (
     <main className="container max-w-2xl py-12 mx-auto px-4">

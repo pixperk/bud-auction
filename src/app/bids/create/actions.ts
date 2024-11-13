@@ -31,5 +31,5 @@ export async function createItemAction(formData: FormData) {
       emoji : formData.get("emoji") as string,
       bidInterval : bidIntervalAsCents
     });
-  redirect("/");
+    redirect("/auctions/my");
 }

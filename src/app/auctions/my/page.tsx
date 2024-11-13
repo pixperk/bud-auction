@@ -5,12 +5,13 @@ import { eq } from "drizzle-orm";
 import { items } from "@/db/schema";
 import { auth } from "@/auth";
 import { EmptyAuctionState } from "./EmptyAuctionState";
+import { redirect } from "next/navigation";
 
 interface PageProps {}
 
 const Page: FC<PageProps> = async ({}) => {
   const session = await auth();
-  if(!session || !session.user) throw new Error("Unauthorized")
+  if(!session || !session.user)  redirect("/")
 
     const user = session.user
 
@@ -36,6 +37,8 @@ const Page: FC<PageProps> = async ({}) => {
             emoji={item.emoji}
             startingPrice={item.startingPrice}
             color={item.color}
+            endDate = {item.endDate} 
+
           />
         ))}
       </div>

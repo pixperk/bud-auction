@@ -45,6 +45,7 @@ const page: FC<pageProps> = async ({ params: { itemId } }) => {
       color={color}
       bidders={bidders}
       bidInterval={toDollars(item.bidInterval)}
+      endDate = {item.endDate}
     />
   );
 };

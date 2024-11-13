@@ -5,17 +5,20 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Separator } from "@/components/ui/separator"
+import { Calendar } from "@/components/ui/calendar"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { format } from "date-fns"
+import { CalendarIcon } from 'lucide-react'
+import { cn } from "@/lib/utils"
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react'
 import { createItemAction } from './actions'
 import { PlusCircleIcon, Palette, Smile } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
-import { redirect } from 'next/navigation'
 
 function EmojiPickerModal({ onEmojiSelect }: { onEmojiSelect: (emoji: string) => void }) {
   const [selectedEmoji, setSelectedEmoji] = useState('🔔')
   const [open, setOpen] = useState(false)
   
-
   const handleEmojiClick = (emojiData: EmojiClickData) => {
     setSelectedEmoji(emojiData.emoji)
     onEmojiSelect(emojiData.emoji)
@@ -100,16 +103,19 @@ function ColorPickerModal({ onColorSelect }: { onColorSelect: (color: string) =>
 export default function SellItemPage() {
   const [selectedEmoji, setSelectedEmoji] = useState('😀')
   const [selectedColor, setSelectedColor] = useState('#FF0000')
-  const {toast} = useToast()
+  const [endDate, setEndDate] = useState<Date>()
+  const { toast } = useToast()
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     formData.append("emoji", selectedEmoji);
     formData.append("color", selectedColor);
+    
   
     try {
-      await createItemAction(formData);
+      if(!endDate || endDate < new Date()) throw new Error("Please Select appropriate date")
+      await createItemAction(formData, endDate);
       toast({
         title: "Item created successfully!",
         description: "Your new auction item has been added.",
@@ -134,7 +140,7 @@ export default function SellItemPage() {
         </div>
         <Separator className="my-8" />
         <form onSubmit={handleSubmit} className="space-y-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <label htmlFor="name" className="text-sm font-medium text-gray-700">Item Name</label>
               <Input 
@@ -170,6 +176,31 @@ export default function SellItemPage() {
                 min="0"
                 className="h-12 text-lg border-2 border-gray-300 focus:border-gray-500 transition-colors"
               />
+            </div>
+            <div className="space-y-2">
+              <label htmlFor="endDate" className="text-sm font-medium text-gray-700">Auction End Date</label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant={"outline"}
+                    className={cn(
+                      "w-full justify-start text-left font-normal",
+                      !endDate && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {endDate ? format(endDate, "PPP") : <span>Pick a date</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0">
+                  <Calendar
+                    mode="single"
+                    selected={endDate}
+                    onSelect={setEndDate}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-6">

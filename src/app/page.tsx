@@ -1,9 +1,12 @@
+"use client"
+
 import { FC } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Star, ArrowRight, Gavel, Clock, Users, Shield } from "lucide-react";
+import { signIn } from "next-auth/react";
 
 const LandingPage: FC = () => {
   return (
@@ -15,13 +18,18 @@ const LandingPage: FC = () => {
             Discover unique items and bid on exciting auctions. Join our community of buyers and sellers today!
           </p>
           <div className="flex justify-center space-x-4">
-            <Button size="lg" className="bg-purple-600 hover:bg-purple-700">
+            <Button
+             onClick={()=>signIn()}
+            size="lg" className="bg-purple-600 hover:bg-purple-700">
               Get Started
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
-            <Button size="lg" variant="outline" className="border-purple-600 text-purple-600 hover:bg-purple-50">
+            <Link href="/auctions/all">
+            <Button
+            size="lg" variant="outline" className="border-purple-600 text-purple-600 hover:bg-purple-50">
               View Ongoing Auctions
             </Button>
+            </Link>
           </div>
         </section>
 
@@ -69,7 +77,9 @@ const LandingPage: FC = () => {
 
         <section className="text-center">
           <h2 className="text-3xl font-semibold mb-8 text-gray-800">Ready to Start Bidding?</h2>
-          <Button size="lg" className="bg-purple-600 hover:bg-purple-700">
+          <Button
+          onClick={()=>signIn()}
+           size="lg" className="bg-purple-600 hover:bg-purple-700">
             Join Bud Auction Now
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>

@@ -1,11 +1,10 @@
 'use client'
 
-import { ReactNode, useState } from 'react'
-import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { Session, User } from 'next-auth'
 import { LogOut } from 'lucide-react'
+import { User } from 'next-auth'
 import { signOut } from 'next-auth/react'
 
 export function UserBadge({user}:{user : User | undefined}) {

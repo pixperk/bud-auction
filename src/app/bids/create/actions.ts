@@ -5,7 +5,7 @@ import { db } from "@/db/database";
 import { items } from "@/db/schema";
 import { redirect } from "next/navigation";
 
-export async function createItemAction(formData: FormData) {
+export async function createItemAction(formData: FormData, endDate:Date) {
   const session = await auth();
 
   if (!session) throw new Error("Unauthorized");
@@ -29,7 +29,8 @@ export async function createItemAction(formData: FormData) {
       userId: user.id,
       color : intColor,
       emoji : formData.get("emoji") as string,
-      bidInterval : bidIntervalAsCents
+      bidInterval : bidIntervalAsCents,
+      endDate
     });
     redirect("/auctions/my");
 }

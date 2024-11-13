@@ -9,10 +9,13 @@ interface AuctionItemProps {
   emoji: string;
   startingPrice: number;
   color: number;
+  endDate : Date
+
 }
 
-export const AuctionItemCard: FC<AuctionItemProps> = ({ id, name, emoji, startingPrice, color }) => {
+export const AuctionItemCard: FC<AuctionItemProps> = ({ id, name, emoji, startingPrice, color,endDate }) => {
   const hexColor = `#${color.toString(16).padStart(6, "0")}`;
+  const isOver = endDate < new Date()
 
   return (
     <Card 
@@ -36,9 +39,9 @@ export const AuctionItemCard: FC<AuctionItemProps> = ({ id, name, emoji, startin
         </p>
       </CardContent>
       <CardFooter className="bg-muted p-4">
-        <Button asChild className="w-full" variant="outline">
+        <Button asChild className="w-full" variant="outline" disabled={isOver}>
           <Link href = {`/items/${id}`}>
-          Start Bidding
+          {!isOver?"Start Bidding":"View Auction Results"}
           </Link>
         </Button>
       </CardFooter>

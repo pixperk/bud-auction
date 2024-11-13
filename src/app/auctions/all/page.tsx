@@ -20,6 +20,7 @@ const Page: FC<PageProps> = async ({}) => {
             emoji={item.emoji}
             startingPrice={item.startingPrice}
             color={item.color}
+            endDate = {item.endDate} 
           />
         ))}
       </div>

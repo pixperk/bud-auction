@@ -97,7 +97,8 @@ export const items = pgTable("item", {
   color: integer("color").notNull().default(4251856),
   emoji: text("emoji").notNull().default("🔔"),
   bidInterval: integer("bidInterval").notNull().default(100),
-  currentBid : integer("currentBid").notNull().default(0)
+  currentBid : integer("currentBid").notNull().default(0),
+  endDate : timestamp("timestamp", {mode : "date"}).notNull()
 });
 
 export const bids = pgTable("bids", {

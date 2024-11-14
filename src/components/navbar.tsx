@@ -144,7 +144,9 @@ export function Navbar() {
               {session.data?.user ? (
                 <UserBadge user={session.data.user} />
               ) : (
-                <Button type="submit" onClick={() => signIn()}>
+                <Button type="submit" onClick={() => signIn("google",{
+                  callbackUrl : "/auctions/all"
+                })}>
                   Sign In
                 </Button>
               )}

@@ -2,10 +2,11 @@
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { ArrowRight, Clock, Gavel, Star, Users, MessageSquare } from 'lucide-react'
+import { ArrowRight, Clock, Gavel, MessageSquare, Star, Users } from 'lucide-react'
 import { signIn } from "next-auth/react"
-import Link from "next/link"
 import Image from "next/image"
+import Link from "next/link"
+
 
 export default function LandingPage() {
   return (
@@ -17,7 +18,9 @@ export default function LandingPage() {
             Discover unique items and bid on exciting auctions. Join our community of buyers and sellers today!
           </p>
           <div className="flex flex-col sm:flex-row justify-center md:justify-start space-y-4 sm:space-y-0 sm:space-x-4">
-            <Button onClick={() => signIn()} size="lg" className="bg-purple-600 hover:bg-purple-700">
+            <Button onClick={() => signIn("google",{
+                  callbackUrl : "/auctions/all"
+                })} size="lg" className="bg-purple-600 hover:bg-purple-700">
               Get Started
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
@@ -122,7 +125,9 @@ export default function LandingPage() {
 
       <section className="text-center">
         <h2 className="text-3xl font-semibold mb-8 text-gray-800">Ready to Start Bidding?</h2>
-        <Button onClick={() => signIn()} size="lg" className="bg-purple-600 hover:bg-purple-700">
+        <Button onClick={() => signIn("google",{
+                  callbackUrl : "/auctions/all"
+                })} size="lg" className="bg-purple-600 hover:bg-purple-700">
           Join Bud Auction Now
           <ArrowRight className="ml-2 h-5 w-5" />
         </Button>

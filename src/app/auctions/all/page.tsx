@@ -1,13 +1,10 @@
 import { AuctionItemCard } from "@/components/AuctionItemCard";
-import { db } from "@/db/database";
+import { getItems } from "./itemQuery";
 
 
 
 const Page = async () => {
-  const allItems = await db().query.items.findMany({
-    limit : 60
-  });
-
+  const allItems  = await getItems()
   return (
     <main className="container py-12 mx-auto">
       <h2 className="text-3xl font-bold mb-8 text-center">Auction Items</h2>

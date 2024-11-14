@@ -2,7 +2,7 @@ import { auth } from "@/auth";
 import { AuctionItemCard } from "@/components/AuctionItemCard";
 import { db as database } from "@/db/database";
 import { items } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { EmptyAuctionState } from "./EmptyAuctionState";
 
@@ -15,7 +15,8 @@ const Page = async ({}) => {
     const user = session.user
 
   const allItems = await database().query.items.findMany({
-    where : eq(items.userId, user.id!)
+    where : eq(items.userId, user.id!),
+    orderBy : desc(items.id)
   });
 
   const hasItems = allItems.length>0

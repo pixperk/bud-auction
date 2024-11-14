@@ -5,6 +5,7 @@ import { items } from "@/db/schema";
 import { desc, eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { EmptyAuctionState } from "./EmptyAuctionState";
+import { isBidOver } from "@/utils/bid";
 
 
 
@@ -37,7 +38,7 @@ const Page = async ({}) => {
             emoji={item.emoji}
             startingPrice={item.startingPrice}
             color={item.color}
-            endDate = {item.endDate} 
+            isOver = {isBidOver(item)} 
 
           />
         ))}

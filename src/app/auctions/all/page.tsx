@@ -1,5 +1,6 @@
 import { AuctionItemCard } from "@/components/AuctionItemCard";
 import { getItems } from "./itemQuery";
+import { isBidOver } from "@/utils/bid";
 
 
 
@@ -17,7 +18,7 @@ const Page = async () => {
             emoji={item.emoji}
             startingPrice={item.startingPrice}
             color={item.color}
-            endDate = {item.endDate} 
+            isOver = {isBidOver(item)} 
           />
         ))}
       </div>

@@ -63,7 +63,7 @@ export default function DiscordSettings({ initialDiscordId = '', updateDiscord }
             <AlertDescription>
               <ul className="list-disc pl-4 space-y-2">
                 <li>
-                  <Link href="https://discord.com/api/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=2048&scope=bot" className={highlightedLinkClass} target="_blank" rel="noopener noreferrer">
+                  <Link href="https://discord.com/oauth2/authorize?client_id=1306223397696569395&permissions=2048&integration_type=0&scope=bot" className={highlightedLinkClass} target="_blank" rel="noopener noreferrer">
                     Add our bot to your server
                   </Link> to receive outbidding alerts on Discord.
                 </li>

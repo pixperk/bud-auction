@@ -6,6 +6,7 @@ export const env = createEnv({
         DATABASE_URL :  z.string().url(),
         NODE_ENV : z.string().min(1),
         KNOCK_SECRET_KEY : z.string().min(1),
+        DISCORD_BOT_TOKEN : z.string().min(1)
     },
     client:{
         NEXT_PUBLIC_KNOCK_PUBLIC_API_KEY : z.string().min(1),
@@ -17,6 +18,6 @@ export const env = createEnv({
         NEXT_PUBLIC_KNOCK_PUBLIC_API_KEY : process.env.NEXT_PUBLIC_KNOCK_PUBLIC_API_KEY,
         NEXT_PUBLIC_KNOCK_FEED_ID : process.env.NEXT_PUBLIC_KNOCK_FEED_ID,
         KNOCK_SECRET_KEY : process.env.KNOCK_SECRET_KEY,
-
+        DISCORD_BOT_TOKEN : process.env.DISCORD_BOT_TOKEN
     }
 })

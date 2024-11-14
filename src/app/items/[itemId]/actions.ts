@@ -7,6 +7,7 @@ import { desc, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { Knock } from "@knocklabs/node";
 import { env } from "@/env";
+import { DiscordClient } from "@/utils/discord-client";
 
 const knock = new Knock(env.KNOCK_SECRET_KEY);
 
@@ -65,7 +66,7 @@ export async function createBidAction(itemId: number, userBid: number) {
   const recipients: {
     id: string;
     name: string;
-    email: string;
+    discordId: string;
   }[] = [];
 
   for (const bid of currentBids) {
@@ -76,8 +77,25 @@ export async function createBidAction(itemId: number, userBid: number) {
       recipients.push({
         id: bid.userId + "",
         name: bid.user.name ?? "Anonymous",
-        email: bid.user.email!,
+        discordId: bid.user.discordId ?? "",
       });
+    }
+  }
+
+  const eventData = {
+    title: `Someone just outbid you on ${item.name} ${item.emoji}`,
+    description: `You were just outbidden. The highest bid on ${
+      item.name
+    } is now $${bidValue / 100}. Go and outbid them now on Bud Auction`,
+    color: item.color,
+    timestamp: new Date().toISOString(),
+  };
+
+  for (const recipient of recipients) {
+    if (recipient.discordId.length>0) {
+      const discord = new DiscordClient(process.env.DISCORD_BOT_TOKEN);
+      const dmChannel = await discord.createDM(recipient.discordId);
+      await discord.sendEmbed(dmChannel.id, eventData);
     }
   }
 

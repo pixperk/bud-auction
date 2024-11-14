@@ -109,7 +109,7 @@ export default function AuctionItemPage({
           description: `Your bid of $${userBid.toLocaleString()} has been placed.`,
         });
       } catch (e: unknown) {
-        const errorMessage = e instanceof Error ? e.message : "An unexpected error occurred.";
+        const errorMessage = e instanceof Error ? "Inappropriate Bid Amount" : "An unexpected error occurred.";
         setCurrentBid(currentBid);
         setUserBid(currentBid);
         toast({

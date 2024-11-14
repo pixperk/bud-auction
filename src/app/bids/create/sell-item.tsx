@@ -121,7 +121,7 @@ export default function SellItemPage() {
       });
      
     } catch (e: unknown) {
-      const errorMessage = e instanceof Error ? "Inappropriate Bid Amount" : "An unexpected error occurred.";
+      const errorMessage = e instanceof Error ? e.message : "An unexpected error occurred.";
       toast({
         title: "Error creating item",
         description: errorMessage,

@@ -4,7 +4,9 @@ import { db } from "@/db/database";
 
 
 const Page = async () => {
-  const allItems = await db().query.items.findMany();
+  const allItems = await db().query.items.findMany({
+    limit : 60
+  });
 
   return (
     <main className="container py-12 mx-auto">

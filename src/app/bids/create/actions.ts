@@ -3,6 +3,7 @@
 import { auth } from "@/auth";
 import { db } from "@/db/database";
 import { items } from "@/db/schema";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 export async function createItemAction(formData: FormData, endDate:Date) {
@@ -32,5 +33,7 @@ export async function createItemAction(formData: FormData, endDate:Date) {
       bidInterval : bidIntervalAsCents,
       endDate
     });
+    revalidatePath("/auctions/my")
+    revalidatePath("/auctions/all")
     redirect("/auctions/my");
 }

@@ -1,8 +1,7 @@
-import { FC } from "react";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
+import { FC } from "react";
 
 export const EmptyAuctionState: FC = () => {
   return (
@@ -32,7 +31,7 @@ export const EmptyAuctionState: FC = () => {
       </div>
       <h3 className="text-2xl font-semibold mb-2">No auctions yet</h3>
       <p className="text-muted-foreground mb-8 max-w-sm">
-        Get started by creating your first auction. It's easy and only takes a few minutes!
+        Get started by creating your first auction. It &apos; easy and only takes a few minutes!
       </p>
       <Link href="/bids/create" passHref>
         <Button

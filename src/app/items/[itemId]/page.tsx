@@ -1,11 +1,11 @@
 import { db } from "@/db/database";
-import { bids, items } from "@/db/schema";
-import { desc, eq } from "drizzle-orm";
+import { items } from "@/db/schema";
+import { toDollars } from "@/utils/currency";
+import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { FC } from "react";
-import AuctionItemPage from "./item-auction-page";
-import { toDollars } from "@/utils/currency";
 import { getAllBids } from "./actions";
+import AuctionItemPage from "./item-auction-page";
 
 interface pageProps {
   params: { itemId: string };

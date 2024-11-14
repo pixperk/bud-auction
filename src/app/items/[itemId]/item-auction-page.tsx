@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Card,
   CardContent,
@@ -10,16 +10,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { useToast } from "@/hooks/use-toast";
-import {
-  Clock,
-  DollarSign,
-  Users,
-  ChevronUp,
-  ChevronDown,
-  User,
-} from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -28,6 +18,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -36,13 +27,22 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { createBidAction } from "./actions";
 import { Bids } from "@/db/schema";
+import { useToast } from "@/hooks/use-toast";
 import { toDollars } from "@/utils/currency";
-import { formatDate, formatTimeDifference } from "@/utils/date";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useSession } from "next-auth/react";
+import { formatDate } from "@/utils/date";
 import format from "date-fns/format";
+import {
+  ChevronDown,
+  ChevronUp,
+  Clock,
+  DollarSign,
+  User,
+  Users,
+} from "lucide-react";
+import { useSession } from "next-auth/react";
+import { useState } from "react";
+import { createBidAction } from "./actions";
 
 type BidType = Bids & {
   user: {
@@ -108,12 +108,13 @@ export default function AuctionItemPage({
           title: "Bid placed successfully!",
           description: `Your bid of $${userBid.toLocaleString()} has been placed.`,
         });
-      } catch (e: any) {
+      } catch (e: unknown) {
+        const errorMessage = e instanceof Error ? e.message : "An unexpected error occurred.";
         setCurrentBid(currentBid);
         setUserBid(currentBid);
         toast({
           title: "Error placing bid",
-          description: e.message || "An unexpected error occurred.",
+          description: errorMessage,
           variant: "destructive",
         });
       }
@@ -152,7 +153,7 @@ export default function AuctionItemPage({
             </div>
             <div className="flex items-center space-x-2">
               <Users className="text-gray-500" />
-              <span className="text-gray-700">{bidders.length} bidders</span>
+              <span className="text-gray-700">{bidders.length} bids</span>
             </div>
           </div>
 
@@ -315,7 +316,7 @@ export default function AuctionItemPage({
                   </>
                 )
               ) : (
-                "Kindly Log In"
+                "Kindly Log In to Bid"
               )}
             </Button>
           )

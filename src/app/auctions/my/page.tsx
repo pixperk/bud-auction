@@ -1,15 +1,14 @@
-import { db as database } from "@/db/database";
-import { FC } from "react";
-import { AuctionItemCard } from "@/components/AuctionItemCard";
-import { eq } from "drizzle-orm";
-import { items } from "@/db/schema";
 import { auth } from "@/auth";
-import { EmptyAuctionState } from "./EmptyAuctionState";
+import { AuctionItemCard } from "@/components/AuctionItemCard";
+import { db as database } from "@/db/database";
+import { items } from "@/db/schema";
+import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
+import { EmptyAuctionState } from "./EmptyAuctionState";
 
-interface PageProps {}
 
-const Page: FC<PageProps> = async ({}) => {
+
+const Page = async ({}) => {
   const session = await auth();
   if(!session || !session.user)  redirect("/")
 

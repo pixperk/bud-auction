@@ -1,19 +1,18 @@
 'use client'
 
-import { useState } from 'react'
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Separator } from "@/components/ui/separator"
 import { Calendar } from "@/components/ui/calendar"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { format } from "date-fns"
-import { CalendarIcon } from 'lucide-react'
-import { cn } from "@/lib/utils"
-import EmojiPicker, { EmojiClickData } from 'emoji-picker-react'
-import { createItemAction } from './actions'
-import { PlusCircleIcon, Palette, Smile } from 'lucide-react'
+import { Separator } from "@/components/ui/separator"
 import { useToast } from '@/hooks/use-toast'
+import { cn } from "@/lib/utils"
+import { format } from "date-fns"
+import EmojiPicker, { EmojiClickData } from 'emoji-picker-react'
+import { CalendarIcon, Palette, PlusCircleIcon, Smile } from 'lucide-react'
+import { useState } from 'react'
+import { createItemAction } from './actions'
 
 function EmojiPickerModal({ onEmojiSelect }: { onEmojiSelect: (emoji: string) => void }) {
   const [selectedEmoji, setSelectedEmoji] = useState('🔔')
@@ -121,13 +120,15 @@ export default function SellItemPage() {
         description: "Your new auction item has been added.",
       });
      
-    } catch (e : any) {
+    } catch (e: unknown) {
+      const errorMessage = e instanceof Error ? e.message : "An unexpected error occurred.";
       toast({
         title: "Error creating item",
-        description: e.message || "An unexpected error occurred.",
+        description: errorMessage,
         variant: "destructive",
       });
     }
+    
   };
   
 

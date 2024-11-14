@@ -1,12 +1,10 @@
-import { auth } from "@/auth";
-import { db as database } from "@/db/database";
-import { FC } from "react";
 import { AuctionItemCard } from "@/components/AuctionItemCard";
+import { db } from "@/db/database";
 
-interface PageProps {}
 
-const Page: FC<PageProps> = async ({}) => {
-  const allItems = await database().query.items.findMany();
+
+const Page = async () => {
+  const allItems = await db().query.items.findMany();
 
   return (
     <main className="container py-12 mx-auto">

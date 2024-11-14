@@ -1,12 +1,11 @@
 "use client"
 
-import { FC } from "react";
-import Link from "next/link";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Star, ArrowRight, Gavel, Clock, Users, Shield } from "lucide-react";
+import { ArrowRight, Clock, Gavel, Star, Users } from "lucide-react";
 import { signIn } from "next-auth/react";
+import Link from "next/link";
+import { FC } from "react";
 
 const LandingPage: FC = () => {
   return (
@@ -67,7 +66,7 @@ const LandingPage: FC = () => {
                       <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
                     ))}
                   </div>
-                  <p className="text-gray-600 mb-4">"{review.review}"</p>
+                  <p className="text-gray-600 mb-4">&quot;{review.review}&quot;</p>
                   <p className="font-semibold">{review.name}</p>
                 </CardContent>
               </Card>
